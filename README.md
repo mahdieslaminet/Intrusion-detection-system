@@ -2,9 +2,14 @@ intrusion detection system (IDS)
 
 ##################################################################################
 
-SOURCE CODE-->https://drive.google.com/file/d/1p-2PYAGZ9HkvYaKP3IuQt5ZqnfDtfNks/view?usp=drive_link
+PROJECT SOURCE CODE-->https://drive.google.com/file/d/1p-2PYAGZ9HkvYaKP3IuQt5ZqnfDtfNks/view?usp=drive_link
+
+DATA BASE-->https://www.unb.ca/cic/datasets/index.html
+
 
 ##################################################################################
+
+
 
 🛡️ IDS Web Tester
 
@@ -193,6 +198,7 @@ This project is intended for educational and research purposes.
 
 
 For questions or academic review, please contact the project author.
+
 
 
 
