@@ -55,17 +55,27 @@ Optional evaluation (Accuracy, Precision, Recall, F1-score)
 Downloadable results (CSV + JSON summary)
 
 📂 Project Structure
+
 IDS_Project/
+
 ├── app.py                      # Streamlit application
+
 ├── src/                        # Training & preprocessing scripts
+
 ├── outputs/
 │   └── models/                 # Pre-trained models (.joblib)
+
 ├── data/
 │   └── fs/                     # Feature-selected column lists  
+
 ├── sample_inputs/              # Small CSV files for quick testing
+
 ├── requirements.txt            # Python dependencies
+
 ├── README.md                   # Project documentation
+
 └── .gitignore
+
 
 ⚙️ Requirements
 
@@ -183,5 +193,6 @@ This project is intended for educational and research purposes.
 
 
 For questions or academic review, please contact the project author.
+
 
 
