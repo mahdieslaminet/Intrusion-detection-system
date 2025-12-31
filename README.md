@@ -6,6 +6,10 @@ PROJECT SOURCE CODE-->https://drive.google.com/file/d/1p-2PYAGZ9HkvYaKP3IuQt5Zqn
 
 DATA BASE-->https://www.unb.ca/cic/datasets/index.html
 
+ARTICLE-->[IDS.pdf](https://github.com/user-attachments/files/24397644/IDS.pdf)
+
+ARTICLE TRANSLATION-->[IDSt.pdf](https://github.com/user-attachments/files/24397646/IDSt.pdf)
+
 
 ##################################################################################
 
@@ -198,6 +202,7 @@ This project is intended for educational and research purposes.
 
 
 For questions or academic review, please contact the project author.
+
 
 
 
