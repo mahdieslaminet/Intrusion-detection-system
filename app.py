@@ -7,31 +7,35 @@ import streamlit as st
 from joblib import load
 import matplotlib.pyplot as plt
 
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, confusion_matrix, classification_report
+from sklearn.metrics import (
+    accuracy_score,
+    f1_score,
+    precision_score,
+    recall_score,
+    confusion_matrix,
+    classification_report,
+)
+
+
+# =========================
+# Fixed (per your request)
+# =========================
+DATASET_NAME = "CIC-IDS-2017"
+PREFIX = "ids2017"
+MODEL_NAME = "LightGBM"
+LABEL_COL = "Label"  # expected label column in uploaded test CSV (if exists)
 
 
 # ---------------- Paths ----------------
 BASE = Path(__file__).resolve().parent
 MODELS_DIR = BASE / "outputs" / "models"
 FS_DIR = BASE / "data" / "fs"
-SPLITS_DIR = BASE / "data" / "splits"   # optional (scaler)
-MAPPINGS_DIR = BASE / "data" / "mappings"  # optional (label maps)
-
-DATASETS = {
-    "CIC-IDS-2017": "ids2017",
-    "CSE-CIC-IDS-2018": "ids2018",
-    "CIC-DDoS-2019 (5pct)": "ddos2019_5pct",
-}
-
-MODELS = ["LightGBM", "RandomForest", "XGBoost", "CatBoost"]  # put best first
+SPLITS_DIR = BASE / "data" / "splits"        # optional scaler
+MAPPINGS_DIR = BASE / "data" / "mappings"    # optional label maps
 
 
 # ---------------- Streamlit page ----------------
-st.set_page_config(
-    page_title="IDS Web Tester",
-    page_icon="🛡️",
-    layout="wide"
-)
+st.set_page_config(page_title="IDS Web Tester", page_icon="🛡️", layout="wide")
 
 st.markdown(
     """
@@ -40,13 +44,28 @@ st.markdown(
       .stMetric { background: #0b1220; padding: 10px 12px; border-radius: 10px; }
       div[data-testid="stMetricValue"] { font-size: 24px; }
       .small-note { opacity: 0.75; font-size: 12px; }
+      .pill {
+        display:inline-block; padding: 6px 10px; border-radius:999px;
+        background:#111a2e; border:1px solid #22304f; margin-right:8px;
+        font-size: 12px; opacity: .95;
+      }
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 st.title("🛡️ IDS Web Tester")
-st.caption("Upload a CSV → choose dataset & model → run detection → view results & download output.")
+st.caption("Upload the CIC-IDS-2017 test CSV → run LightGBM detection → view predictions + model metrics (if Label exists).")
+
+st.markdown(
+    f"""
+    <div>
+      <span class="pill">Dataset: <b>{DATASET_NAME}</b></span>
+      <span class="pill">Model: <b>{MODEL_NAME}</b></span>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 
 # ---------------- Caching ----------------
@@ -78,7 +97,6 @@ def load_optional_label_map(prefix: str):
     """
     Optional mapping file:
       data/mappings/{prefix}_label_map.json
-
     Example:
       {"0":"BENIGN", "1":"DoS", ...}
     """
@@ -86,7 +104,6 @@ def load_optional_label_map(prefix: str):
     if p.exists():
         with open(p, "r", encoding="utf-8") as f:
             mp = json.load(f)
-        # normalize keys to int if possible
         out = {}
         for k, v in mp.items():
             try:
@@ -111,11 +128,9 @@ def coerce_numeric(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def read_csv_robust(uploaded_file) -> pd.DataFrame:
-    # Try standard read
     try:
         return pd.read_csv(uploaded_file)
     except Exception:
-        # fallback encodings
         uploaded_file.seek(0)
         return pd.read_csv(uploaded_file, encoding="latin1")
 
@@ -130,7 +145,7 @@ def predict_pipeline(df_raw: pd.DataFrame, prefix: str, model_name: str):
     missing = [c for c in kept_cols if c not in df.columns]
     if missing:
         raise ValueError(
-            "Your uploaded CSV is missing required columns.\n"
+            "Your uploaded CSV is missing required feature columns.\n"
             "Missing examples:\n- " + "\n- ".join(missing[:25]) +
             ("\n..." if len(missing) > 25 else "")
         )
@@ -139,7 +154,6 @@ def predict_pipeline(df_raw: pd.DataFrame, prefix: str, model_name: str):
     X = coerce_numeric(X)
 
     nan_ratio = float(X.isna().mean().mean())
-    # For a demo UI, fill NaN with 0. For strict research mode, you could drop rows instead.
     X = X.fillna(0.0)
 
     used_scaler = False
@@ -164,16 +178,14 @@ def try_build_y_true(df_out: pd.DataFrame, label_col: str, label_map: dict | Non
       - string Label (mapped via label_map if available)
     """
     if label_col not in df_out.columns:
-        return None, "No Label column found."
+        return None, "No Label column found in your CSV."
 
     y = df_out[label_col]
 
-    # numeric?
     y_num = pd.to_numeric(y, errors="coerce")
     if not y_num.isna().any():
         return y_num.astype(int).values, "Label is numeric."
 
-    # string with mapping?
     if label_map:
         inv = {v: k for k, v in label_map.items()}
         y_mapped = y.astype(str).map(inv)
@@ -188,23 +200,20 @@ def try_build_y_true(df_out: pd.DataFrame, label_col: str, label_map: dict | Non
 with st.sidebar:
     st.header("Settings")
 
-    dataset_name = st.selectbox("Dataset", list(DATASETS.keys()))
-    prefix = DATASETS[dataset_name]
-
-    model_name = st.selectbox("Model", MODELS, index=0)
+    st.write(f"**Dataset:** {DATASET_NAME}")
+    st.write(f"**Model:** {MODEL_NAME}")
 
     st.markdown("---")
     show_attack_only = st.checkbox("Show only suspected attacks", value=False)
     max_rows_show = st.slider("Max rows to display", 50, 2000, 200, step=50)
 
     st.markdown("---")
-    st.subheader("Optional features")
-    st.caption("If you add mapping files, the UI becomes richer.")
+    st.subheader("Optional files (recommended)")
     st.markdown(
         """
         <div class="small-note">
-        • data/mappings/{prefix}_label_map.json  → show class names + enable evaluation for string labels<br/>
-        • data/splits/{prefix}_scaler.joblib     → apply training scaler (best fidelity)<br/>
+        • data/mappings/ids2017_label_map.json  → show class names + enable evaluation for string labels<br/>
+        • data/splits/ids2017_scaler.joblib     → apply training scaler (best fidelity)<br/>
         </div>
         """,
         unsafe_allow_html=True
@@ -212,10 +221,10 @@ with st.sidebar:
 
 
 # ---------------- Main: Upload ----------------
-uploaded = st.file_uploader("Upload a CSV file", type=["csv"])
+uploaded = st.file_uploader("Upload CIC-IDS-2017 test CSV", type=["csv"])
 
 if uploaded is None:
-    st.info("Upload a CSV file to start. The file should include the dataset feature columns (at least the selected feature set).")
+    st.info("Upload the CIC-IDS-2017 test CSV to start.")
     st.stop()
 
 df_raw = read_csv_robust(uploaded)
@@ -241,10 +250,20 @@ if not run:
 
 
 # ---------------- Run Prediction ----------------
-label_map = load_optional_label_map(prefix)
+label_map = load_optional_label_map(PREFIX)
 
 try:
-    y_pred, nan_ratio, used_scaler, kept_cols = predict_pipeline(df_raw, prefix, model_name)
+    y_pred, nan_ratio, used_scaler, kept_cols = predict_pipeline(df_raw, PREFIX, MODEL_NAME)
+except ModuleNotFoundError as e:
+    # This is the common case when lightgbm is not installed but model is LightGBM
+    st.error(
+        "A required Python module is missing.\n\n"
+        f"**Details:** {e}\n\n"
+        "If you are using the LightGBM model, install it first:\n"
+        "- `pip install lightgbm`\n"
+        "- On macOS (Apple Silicon) you may need: `brew install libomp` then `pip install lightgbm`"
+    )
+    st.stop()
 except Exception as e:
     st.error(str(e))
     st.stop()
@@ -257,9 +276,8 @@ if label_map:
 else:
     df_out["predicted_label"] = df_out["predicted_class_id"].astype(str)
 
-# Optional: Attack-only
+# Optional: Attack-only filter
 if show_attack_only:
-    # heuristic: if mapping exists and includes BENIGN, filter it out; else filter class_id==0 as common benign
     if label_map and any(str(v).upper() == "BENIGN" for v in label_map.values()):
         benign_ids = [k for k, v in label_map.items() if str(v).upper() == "BENIGN"]
         df_view = df_out[~df_out["predicted_class_id"].isin(benign_ids)]
@@ -282,16 +300,15 @@ if not used_scaler:
     st.warning("Scaler was not applied (missing or incompatible scaler file). Tree-based models often work fine, but for maximum fidelity, save and load the training scaler.")
 
 
-# ---------------- Distribution chart ----------------
+# ---------------- Predicted distribution ----------------
 st.subheader("Predicted Class Distribution")
-
 vc = df_out["predicted_class_id"].value_counts().sort_index()
 
 fig = plt.figure()
 plt.bar(vc.index.astype(str), vc.values)
 plt.xlabel("Class ID")
 plt.ylabel("Count")
-plt.title(f"{dataset_name} • {model_name}")
+plt.title(f"{DATASET_NAME} • {MODEL_NAME}")
 st.pyplot(fig)
 
 if label_map:
@@ -299,25 +316,34 @@ if label_map:
         st.json({str(k): v for k, v in sorted(label_map.items(), key=lambda x: x[0])})
 
 
-# ---------------- Optional evaluation ----------------
-st.subheader("Optional Evaluation (if your CSV contains Label)")
-label_col = "Label"
-y_true, why = try_build_y_true(df_out, label_col, label_map)
+# ---------------- Evaluation (Accuracy/Precision/etc) ----------------
+st.subheader("Model Performance (if your CSV contains Label)")
+y_true, why = try_build_y_true(df_out, LABEL_COL, label_map)
 
 if y_true is None:
-    st.info(f"Evaluation not available: {why}")
+    st.info(f"Performance metrics not available: {why}")
 else:
     y_pred_int = df_out["predicted_class_id"].astype(int).values
-    acc = accuracy_score(y_true, y_pred_int)
-    f1w = f1_score(y_true, y_pred_int, average="weighted", zero_division=0)
-    precw = precision_score(y_true, y_pred_int, average="weighted", zero_division=0)
-    recw = recall_score(y_true, y_pred_int, average="weighted", zero_division=0)
 
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Accuracy", f"{acc:.4f}")
-    c2.metric("F1 (weighted)", f"{f1w:.4f}")
-    c3.metric("Precision (weighted)", f"{precw:.4f}")
-    c4.metric("Recall (weighted)", f"{recw:.4f}")
+    acc = accuracy_score(y_true, y_pred_int)
+    prec_macro = precision_score(y_true, y_pred_int, average="macro", zero_division=0)
+    rec_macro = recall_score(y_true, y_pred_int, average="macro", zero_division=0)
+    f1_macro = f1_score(y_true, y_pred_int, average="macro", zero_division=0)
+
+    prec_w = precision_score(y_true, y_pred_int, average="weighted", zero_division=0)
+    rec_w = recall_score(y_true, y_pred_int, average="weighted", zero_division=0)
+    f1_w = f1_score(y_true, y_pred_int, average="weighted", zero_division=0)
+
+    r1, r2, r3, r4 = st.columns(4)
+    r1.metric("Accuracy", f"{acc:.4f}")
+    r2.metric("Precision (macro)", f"{prec_macro:.4f}")
+    r3.metric("Recall (macro)", f"{rec_macro:.4f}")
+    r4.metric("F1 (macro)", f"{f1_macro:.4f}")
+
+    r5, r6, r7 = st.columns(3)
+    r5.metric("Precision (weighted)", f"{prec_w:.4f}")
+    r6.metric("Recall (weighted)", f"{rec_w:.4f}")
+    r7.metric("F1 (weighted)", f"{f1_w:.4f}")
 
     with st.expander("Classification report"):
         st.text(classification_report(y_true, y_pred_int, zero_division=0))
@@ -329,21 +355,20 @@ else:
 
 # ---------------- Output table + downloads ----------------
 st.subheader("Output Table")
-
 st.dataframe(df_view.head(max_rows_show), use_container_width=True)
 
 csv_bytes = df_out.to_csv(index=False).encode("utf-8-sig")
 st.download_button(
     "⬇️ Download CSV with predictions",
     data=csv_bytes,
-    file_name=f"{prefix}_{model_name}_predictions.csv",
-    mime="text/csv"
+    file_name=f"{PREFIX}_{MODEL_NAME}_predictions.csv",
+    mime="text/csv",
 )
 
 summary = {
-    "dataset": prefix,
-    "dataset_display": dataset_name,
-    "model": model_name,
+    "dataset": PREFIX,
+    "dataset_display": DATASET_NAME,
+    "model": MODEL_NAME,
     "rows": int(len(df_out)),
     "features_used": int(len(kept_cols)),
     "nan_ratio": float(nan_ratio),
@@ -351,10 +376,22 @@ summary = {
     "predicted_distribution": {str(int(k)): int(v) for k, v in vc.items()},
 }
 
+# add metrics to summary (if available)
+if y_true is not None:
+    summary["metrics"] = {
+        "accuracy": float(acc),
+        "precision_macro": float(prec_macro),
+        "recall_macro": float(rec_macro),
+        "f1_macro": float(f1_macro),
+        "precision_weighted": float(prec_w),
+        "recall_weighted": float(rec_w),
+        "f1_weighted": float(f1_w),
+    }
+
 summary_bytes = json.dumps(summary, indent=2).encode("utf-8")
 st.download_button(
     "⬇️ Download JSON summary",
     data=summary_bytes,
-    file_name=f"{prefix}_{model_name}_summary.json",
-    mime="application/json"
+    file_name=f"{PREFIX}_{MODEL_NAME}_summary.json",
+    mime="application/json",
 )
