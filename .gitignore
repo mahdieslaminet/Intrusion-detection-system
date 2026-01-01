@@ -29,3 +29,7 @@ outputs/models/*
 
 # Keep folder
 !outputs/models/.gitkeep
+
+!sample_inputs/
+!sample_inputs/*.csv
+
