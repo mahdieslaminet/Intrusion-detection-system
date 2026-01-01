@@ -1,46 +1,25 @@
-intrusion detection system (IDS)
+Intrusion Detection System (IDS) using Machine Learning
 
-##################################################################################
+This repository contains the implementation of a Machine Learning–based Intrusion Detection System (IDS) developed as an academic project.
 
-PROJECT SOURCE CODE-->https://drive.google.com/file/d/1p-2PYAGZ9HkvYaKP3IuQt5ZqnfDtfNks/view?usp=drive_link
+The project is inspired by the research paper:
 
-DATA SETS-->https://www.unb.ca/cic/datasets/index.html
+Intrusion Detection System for Cyberattacks in the Internet of Vehicles Environment
 
-ARTICLE-->[IDS.pdf](https://github.com/user-attachments/files/24397644/IDS.pdf)
+The complete project pipeline has been fully implemented, including data preprocessing, feature selection, class balancing, model training, evaluation, and deployment through a web-based interface.
 
-ARTICLE TRANSLATION-->[IDSt.pdf](https://github.com/user-attachments/files/24397646/IDSt.pdf)
+📌 Project Status (Important)
 
-PROJECT REPORT-->[project report.pdf](https://github.com/user-attachments/files/24399533/project.report.pdf)
+✅ The project is fully completed.
+All stages described in the reference paper have been implemented and tested on multiple benchmark datasets.
 
+However, to keep this GitHub repository lightweight and easy to run, only one trained model is included here for demonstration and evaluation purposes.
 
+The full version of the project, including all trained models and artifacts, is available separately.
 
-##################################################################################
+📊 Supported Datasets (Fully Implemented)
 
-
-
-🛡️ IDS Web Tester
-
-Machine Learning–Based Intrusion Detection System with Streamlit UI
-
-This repository contains a complete implementation of a machine-learning-based Intrusion Detection System (IDS) along with a Streamlit web application that allows users to test trained models on network traffic data in CSV format.
-
-The project is designed for academic use and enables instructors or reviewers to run the system end-to-end without retraining models or downloading full datasets.
-
-📌 Project Objectives
-
-Implement an IDS using classical and gradient-boosting ML models
-
-Apply feature selection and proper preprocessing
-
-Provide an interactive UI for testing trained models
-
-Enable reproducible evaluation for university coursework
-
-🚀 Features
-
-Upload CSV files containing network flow features
-
-Support for multiple datasets:
+The complete project was implemented and evaluated on the following datasets:
 
 CIC-IDS-2017
 
@@ -48,116 +27,29 @@ CSE-CIC-IDS-2018
 
 CIC-DDoS-2019
 
-Multiple trained models:
+All datasets were processed using the same pipeline:
 
-LightGBM
+Data cleaning and normalization
+
+Feature selection
+
+Class imbalance handling (SMOTE / SMOTE-ENN)
+
+Model training and evaluation
+
+🧠 Machine Learning Models (Fully Implemented)
+
+The following models were fully trained and evaluated during the project:
 
 Random Forest
 
 XGBoost
 
+LightGBM
+
 CatBoost
 
-Real-time inference (no retraining required)
-
-Visualization of prediction distribution
-
-Optional evaluation (Accuracy, Precision, Recall, F1-score)
-
-Downloadable results (CSV + JSON summary)
-
-📂 Project Structure
-
-IDS_Project/
-
-├── app.py                      # Streamlit application
-
-├── src/                        # Training & preprocessing scripts
-
-├── outputs/
-│   └── models/                 # Pre-trained models (.joblib)
-
-├── data/
-│   └── fs/                     # Feature-selected column lists  
-
-├── sample_inputs/              # Small CSV files for quick testing
-
-├── requirements.txt            # Python dependencies
-
-├── README.md                   # Project documentation
-
-└── .gitignore
-
-
-⚙️ Requirements
-
-Python 3.10 or higher (recommended)
-
-Operating System: Windows / Linux / macOS
-
-Install dependencies using:
-
-pip install -r requirements.txt
-
-▶️ Running the Application
-
-From the project root directory, run:
-
-streamlit run app.py
-
-
-Then open the following URL in your browser:
-
-http://localhost:8501
-
-🧪 Quick Test (Recommended for Instructors)
-
-Sample input files are provided to allow testing without downloading full datasets.
-
-Use files from:
-
-sample_inputs/
-
-
-Example:
-
-sample_inputs/ids2017_sample.csv
-
-sample_inputs/ids2018_sample.csv
-
-sample_inputs/ddos2019_sample.csv
-
-Steps:
-
-Launch the app
-
-Select the correct dataset
-
-Upload a sample CSV
-
-Click Run Detection
-
-View results and download outputs
-
-🧠 How the System Works (High-Level)
-
-User selects dataset and model
-
-CSV file is uploaded and validated
-
-Required feature columns are checked
-
-Data is preprocessed to match training pipeline
-
-Trained model performs inference
-
-Predictions are visualized and exported
-
-📊 Evaluation (Optional)
-
-If the uploaded CSV file contains a Label column:
-
-The application computes:
+Performance was evaluated using:
 
 Accuracy
 
@@ -167,47 +59,109 @@ Recall (weighted)
 
 F1-score (weighted)
 
-Confusion Matrix and Classification Report are displayed
+Evaluation summaries are stored as JSON reports.
 
-If no Label column exists, the system runs in inference-only mode.
+⚖️ Lightweight GitHub Version (This Repository)
 
-📦 Datasets
+To simplify execution and avoid GitHub file size limitations:
 
-Due to size limitations, full datasets are not included in this repository.
+✅ Only one lightweight trained model is included in this repository
 
-Original datasets can be obtained from:
+❌ Large models and full datasets are intentionally excluded
 
-CIC-IDS-2017
+Included Model
 
-CSE-CIC-IDS-2018
+LightGBM model trained on IDS dataset
+(Used for demonstration, testing, and evaluation)
 
-CIC-DDoS-2019
+This allows instructors to:
 
-Sample subsets are provided for demonstration and testing purposes.
+Clone the repository
 
-🔁 Reproducibility Notes
+Run the application immediately
 
-Feature selection files ensure consistency between training and inference
+Upload sample data
 
-No data leakage: resampling techniques are applied only during training
+Observe real prediction results
 
-The application performs inference only, ensuring fast and deterministic results
+☁️ Full Project Version (Google Drive)
 
-🎓 Academic Use
+The complete version of the project, including:
 
-This project was developed as part of a university coursework / academic project to demonstrate practical application of machine learning techniques in network security and intrusion detection.
+All trained models (2017, 2018, 2019)
 
-📄 License
+Large model files
 
-This project is intended for educational and research purposes.
+Additional artifacts
 
-✉️ Contact
+is available via Google Drive:
+
+👉 Full project (models and artifacts):
+[Google Drive Link – Full Version]
+
+https://drive.google.com/file/d/1p-2PYAGZ9HkvYaKP3IuQt5ZqnfDtfNks/view?usp=sharing
+
+🗂 Repository Structure
+IDS_WITH_ML/
+│
+├── app.py                  # Streamlit web application
+├── src/                     # Data processing & training scripts
+├── sample_inputs/           # Sample CSV files for testing
+├── data/
+│   └── fs/                  # Selected feature lists
+├── outputs/
+│   └── reports/             # Evaluation summaries (JSON)
+├── requirements.txt
+├── README.md
+└── .gitignore
+
+🚀 Running the Project
+Local Execution
+pip install -r requirements.txt
+streamlit run app.py
 
 
-For questions or academic review, please contact the project author.
+Then open the provided local URL in your browser.
 
+Google Colab Execution
 
+The project can also be executed on Google Colab:
 
+Clone this repository
 
+Install dependencies
 
+Run the Streamlit application
 
+(Optional) Download full models from Google Drive if needed
+
+🧪 Testing the System
+
+Lightweight sample input files are provided in the sample_inputs/ directory.
+These files allow quick testing without downloading full datasets.
+
+🎓 Academic Note
+
+The entire project pipeline has been fully implemented and validated.
+
+This repository provides a simplified deployment version for ease of testing and evaluation.
+
+The full experimental setup and all trained models are preserved separately and can be accessed if required.
+
+This design follows standard Machine Learning and software engineering best practices, including:
+
+Separation of code and large artifacts
+
+Reproducibility
+
+Clear documentation
+
+📄 Reference
+
+Original research paper: IDS.pdf
+
+Translated version: IDSt.pdf
+
+📬 Contact
+
+For questions regarding the full implementation or execution details, please refer to the documentation or the complete project files linked above.
