@@ -1,0 +1,7 @@
+Destination Port
+Total Length of Fwd Packets
+Bwd Packet Length Std
+Flow Bytes/s
+PSH Flag Count
+Subflow Fwd Bytes
+Init_Win_bytes_forward
