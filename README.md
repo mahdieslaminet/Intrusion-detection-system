@@ -1,8 +1,17 @@
-Intrusion Detection System (IDS) using Machine Learning
-## Run on Google Colab
+## Intrusion Detection System (IDS) using Machine Learning
+######################################################################################################
+Run on Google Colab
 Open the notebook in Colab:
 https://colab.research.google.com/github/sabaamk1404/IDS_WITH_ML/blob/main/notebooks/Run_on_Colab.ipynb
 
+ARTICLE-->[IDS.pdf](https://github.com/user-attachments/files/24402348/IDS.pdf)
+
+ARTICLE TRANSLATION-->[IDSt.pdf](https://github.com/user-attachments/files/24402360/IDSt.pdf)
+
+PROJECT REPORT-->[project report.pdf](https://github.com/user-attachments/files/24402365/project.report.pdf)
+
+DATASETS-->https://www.unb.ca/cic/datasets/index.html
+#######################################################################################################
 This repository contains the implementation of a Machine Learning–based Intrusion Detection System (IDS) developed as an academic project.
 
 The project is inspired by the research paper:
@@ -169,3 +178,4 @@ Translated version: IDSt.pdf
 
 
 For questions regarding the full implementation or execution details, please refer to the documentation or the complete project files linked above.
+
