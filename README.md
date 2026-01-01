@@ -4,11 +4,14 @@ intrusion detection system (IDS)
 
 PROJECT SOURCE CODE-->https://drive.google.com/file/d/1p-2PYAGZ9HkvYaKP3IuQt5ZqnfDtfNks/view?usp=drive_link
 
-DATA BASE-->https://www.unb.ca/cic/datasets/index.html
+DATA SETS-->https://www.unb.ca/cic/datasets/index.html
 
 ARTICLE-->[IDS.pdf](https://github.com/user-attachments/files/24397644/IDS.pdf)
 
 ARTICLE TRANSLATION-->[IDSt.pdf](https://github.com/user-attachments/files/24397646/IDSt.pdf)
+
+PROJECT REPORT-->[project report.pdf](https://github.com/user-attachments/files/24399533/project.report.pdf)
+
 
 
 ##################################################################################
@@ -202,6 +205,7 @@ This project is intended for educational and research purposes.
 
 
 For questions or academic review, please contact the project author.
+
 
 
 
