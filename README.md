@@ -142,17 +142,30 @@ is available via Google Drive:
 https://drive.google.com/file/d/1p-2PYAGZ9HkvYaKP3IuQt5ZqnfDtfNks/view?usp=sharing
 
 🗂 Repository Structure
+
 IDS_WITH_ML/
-│
+
+
 ├── app.py                  # Streamlit web application
+
 ├── src/                     # Data processing & training scripts
+
 ├── sample_inputs/           # Sample CSV files for testing
+
 ├── data/
+
 │   └── fs/                  # Selected feature lists
-├── outputs/
+
+├── 
+outputs/
+
+
 │   └── reports/             # Evaluation summaries (JSON)
+
 ├── requirements.txt
+
 ├── README.md
+
 └── .gitignore
 
 🚀 Running the Project
@@ -206,6 +219,7 @@ Translated version: IDSt.pdf
 
 
 For questions regarding the full implementation or execution details, please refer to the documentation or the complete project files linked above.
+
 
 
 
