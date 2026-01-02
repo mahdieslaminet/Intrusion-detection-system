@@ -1,4 +1,7 @@
 ## Intrusion Detection System (IDS) using Machine Learning
+
+<img width="1893" height="872" alt="Screenshot 2026-01-02 213136" src="https://github.com/user-attachments/assets/d3b71d64-5476-4cba-998f-363fe0e598b5" />
+
 ########################################################################################
 
 ARTICLE-->[IDS.pdf](https://github.com/user-attachments/files/24402348/IDS.pdf)
@@ -203,6 +206,7 @@ Translated version: IDSt.pdf
 
 
 For questions regarding the full implementation or execution details, please refer to the documentation or the complete project files linked above.
+
 
 
 
